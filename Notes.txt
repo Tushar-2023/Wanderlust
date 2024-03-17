@@ -1,0 +1,421 @@
+Proejct Phase 1(Part a)
+------------------------------
+.) Basic Set up
+   - install the express, mongoose, and create app.js  
+   -require the express and mongoose
+   
+.)Listing the model
+  created the listing schema, and model and tried to test by putiing the sampleList into the database
+
+.) Initilize database
+
+.) index route
+  //index route
+ app.get("/listings", async (req, res) => {
+    let allListings = await Listing.find();
+    res.render("./listings/index.ejs", { allListings });
+ });
+
+
+.) Read Route(show Route)
+   listing.price.toLocalString("en-IN")  -----> function to insert the commas into the indian rupees
+   //show route
+   app.get("/listings/:id",async (req,res)=>{
+    let { id } = req.params;
+    let listing = await Listing.findById(id);
+    res.render("./listings/show.ejs",{ listing });
+   })
+
+
+.) Create(new and create route)
+    //create- to create the new list
+  app.post("/listings",async (req,res)=>{
+    const newListing = new Listing(req.body.listing);
+    await newListing.save();
+    res.redirect("/listings");
+  });
+
+
+.) Update(edit and update route)
+//edit route
+app.get("/listings/:id/edit", async (req, res) => {
+    let { id } = req.params;
+    const listing = await Listing.findById(id);
+    res.render("./listings/edit.ejs", { listing });
+});
+
+//Update route 
+app.put("/listings/:id", async (req, res) => {
+    let { id } = req.params;
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    res.redirect("/listings");
+});
+
+.) Delete route
+ //delete route
+ app.delete("/listings/:id",async (req,res)=>{
+    let { id } = req.params;
+    let deletedListing = await Listing.findByIdAndDelete(id);
+    console.log(deletedListing);
+    res.redirect("/listings");
+ })
+
+
+
+
+
+
+Proejct Phase 1(Part b)
+------------------------------
+.) Creating  Boilerplate (common code hum isme likhte hai)
+    ejs-mate(npm package): When called anywhere inside a template, requests that the output of the current template be passed to     the given view as the body local
+
+.) navbar
+  use botstrap navbar and give styling as per requirements
+
+.) footer
+  includes footer in includes folder
+  footer contains the social links, brand and info links
+
+.) Styling index
+   Image overlays: image is in the background and text on the image
+
+.) Styling new index
+
+.) style edit index
+
+.)styling show index
+
+.) styling show listing
+
+
+
+Proejct Phase 1(Part c)
+------------------------------
+.) client side validation
+   validation types
+   client side validation= form se jo data ja rha hai wo sahi form mei ya sahi format hai to hai wo check krna
+   server side validation= db mei jo data store ho rha hai db ke rules nusar ho rha ya nahi o check krna / error handling krna
+   bootstrap ka hum form validation use kr skte hai
+
+
+.)Success and failure text
+  success-valid data filled in the field
+  failed - invalid data filled in the field 
+  **postman ya hopscotch se request krke bootstrap ke customized validation ko override kr skte hai to isliye 
+    server side validation aaya hai**
+
+
+.) Custom error handling
+  - we can use the error handling middleware to handle the error
+  - then we can call that in throug try and catch
+
+.) Wrap Async
+   -utils naam ke folder mei wrapAsync naam ka file bnake usmei wrap async function likho
+   - us file ko app.js mei require kro then async fucntions ke liye use kr skte ho
+
+.) Add ExpressError
+  - extended the ExpressError class from Error class then imported that class app.js
+ - used in the different route to handle the error
+
+
+.) Error.ejs
+   - By using this we can send the error in better fashion
+   - we can use the alert in bootstrap to make it better
+
+.) Validations for schema
+   -joi is tool is used to validate the schema    
+   - joi ki help se hum schema define krte hai ha mongoose wala schema nahi aahe ha   
+     sever side validation wala schema aahe
+  -joi individual field pe validation ko applu krta hai
+  const Joi = require('joi');
+
+  //schema validation
+  module.exports.listingSchema =  Joi.object({
+    listing : Joi.object({
+        title : Joi.string().required(),
+        description: Joi.string().required(),
+        location: Joi.string().required(),
+        country: Joi.string().required(),
+        price: Joi.number().required().min(0),
+        image: Joi.string().allow("",null)
+    }).required()
+  });
+  
+
+.) validation for schema (middlewares)
+  we wrote the function to validate the schma and then simply we added that function into the 
+  create and update route
+  //function to validate the schema
+ const validateListing = (req, res, next) => {
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        let errMsg = error.details.map((el) => el.message).join(',');
+        throw new ExpressError(400, errMsg)
+    } else {
+        next();
+    }
+ }
+
+
+Proejct Phase 2(Part a)
+------------------------------
+
+.)Handling Deletion
+  -handling deletion with mongoose middlewares
+
+.) Mongoose middleware
+   pre - Pre middleware functions are executed one after another, when each middleware calls next
+   pre -run berfore the execution of the query 
+   post - run after the execution of the query
+  //postMiddleware
+ //below middleware cutomer ke sath sath orders lo delete kr dega
+ customerSchema.post("findOneAndDelete", async (customer) => {
+    if (customer.orders.length) {
+        let res = await Order.deleteMany({ _id: { $in: customer.orders } })
+        console.log(res);
+    };
+ });
+  
+
+.) Creating review model
+  -created the review model and exports it, and created the reviews array in the 
+  listing schema.
+
+.)Create Reviews Step1
+   -added the leave a review in show.ejs
+
+.)Create Reviews Step2
+  -sumbitting the form
+  -created the route /listings/:id/reviews
+
+.)Validations for reviews
+  client side validation - form mei novalidate, needs-validation, valid-invalid add kro
+  server side validation- reviewSchema create kro using joi
+                                   - reauired kro app.js
+                                   - function likho to validate
+                                   - then add kro review wale route mei
+
+
+.) Render Reviews  -added into the show.ejs
+   <h4>All Reviews</h4>
+            <ul>
+                <% for(review of listing.reviews){ %>
+                  <li> <%= review.comment %>, <%= review.rating %></li>
+             <% } %>
+            </ul>
+
+.)Adding Style
+  <div class="row">
+                <% for(review of listing.reviews){ %>
+                    <div class="card col-5 ms-3 mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Jan Doe</h5>
+                            <p class="card-text">
+                                <%= review.comment %>
+                            </p>
+                            <p class="card text">
+                                <%= review.rating %> stars
+                            </p>
+                        </div>
+                    </div>
+                    <% } %>
+            </div> 
+
+
+.) Deleting Reviews 
+   - while submitting the review given the action to delete the review 
+     /listings/:id/reviews/:review_id 
+
+.) Handling: Delete Listing
+    -post mongoose middleware create kra to delete
+    -mhnje listing delete keli ki sobtch reviews pn delete hoil
+
+
+
+
+Proejct Phase 2(Part b)
+--------------------------------
+
+.) what is express router
+  - restructuring the listing
+  - listings related sglya goshti listings.js file je routes madhe present aahe tyat taklya   
+
+.) using express router
+   const router = express.Router({mergeParams: true});  <----(agr parent ke kuch parameters child mei nahi aa rahe to 
+                                                                                                  ye properties use krni hai)
+
+.) Restructuring Listings
+   Express Router
+   express router are a way to organize the express applications such that our primary
+   app.js file does not get bloated
+
+
+.)Web coockies
+  -also called as server cookies and http cookies
+  -small block of code hai jo web brower hmare system mei store krta hai while browsing the website
+  -kisi pe website pe hum jb ek page se dusre page pe jate hai to previus pages pe hmne kya action perform 
+   kiya hai o yad rkhta hai.
+ - cookeis ke pass sb pages ka access hota hai
+ - for ex. kisi bhi wesite ke liye hmne index page pe sign in kr liya to hum us website ke baki pages ke liye 
+   signed in hi rehte hai
+
+.) Sending cookies
+    -sent cookies web browser pe store hoti hai
+    -cookies mei hum name value pair send krte hai 
+    
+    app.get("/getcookies", (req,res)=>{
+       res.cookie("greet","Namaste");
+    })
+
+.) cookie Parser 
+  -cookies request chy under madhe store hotat
+  -cookie parser npm package install krna pdega
+ app.use(cookieParser()); ///ye wala middleware hit hoyega while cookies parsing
+
+.) signed cookies
+   - hamare cookies ke sath koi ched khani na ho isliye hum usse signed cookied nma skte hai aur verify bhi kr skte hai
+   app.use(cookieParser("secretcookie"));
+   app.get("/getsignedcookie", (req,res)=>{
+    res. cookie("color","red",{signed:true});
+    res.send("cookie parser sent");
+   });
+
+  //verify kaise kre ki signed cookies hai krke
+   app.get("/verify",(req,res)=>{
+    console.log(req.signedCookies);
+    res.send("Verified");
+  })
+
+
+
+
+
+Proejct Phase 2 (Part c)
+------------------------------
+.) what is state
+   session- jeva client side kdun ek request jate aani tyacha server side kdun ek response yete
+                 teva tyala session mhnte
+  
+  statefull protocol
+  server la status aani session information pn save krayla lavte
+  ex. ftp(file transfer protocol)
+  
+  stateless protocol
+  server la status aani session information save krayla lavt nahi
+  ex.http
+
+
+.) express sessions
+ - make http statefull
+ - creates the session id 
+ - give the session id to the client side(frontend)
+ - installl the npm and require it and then use middleware 
+ - o middleware hr ek request ke liye call  hoga
+  app.use(session({ secret: "mysupersecretstring" }));
+
+
+
+.) exploring sessions option
+  - same website ko hmne different tabs mei khol liya same browser mei 
+    to usko same session id assign hoti hai   
+ -req.session ek single session ko track krta hai
+ 
+.) Storing and using session info
+  - iska kam hota hai session ke ander information ko store krwana ki 
+    hum usko alg alg page aur use kr ske
+
+.) Connect-flash
+  - its an npm package used to flash the messages
+  - its an special area of the session to storing the messages
+  req.flash("success","user registered successfully!");  ----> is flash msg ko hum kahi access kr skte hai through its key 
+
+.) res locals
+   - res.render ke ander jo hum variables render krte hai unhe hum res.locals ke ander store krt skte hai
+   //middleware to showcase the flash messages 
+   app.use((req,res,next)=>{
+    res.locals.successMsg = req.flash("success");
+    res.locals.errorMsg = req.flash("error");
+    next();
+   })
+
+
+.) implementing the session in project
+   - jr aaplyala flash messages generate krayche asel tr 
+   - express-session npm pkg install kra
+   - sessionOptions create kra 
+   - session middlleware madhe sessionOptions pass kra
+
+.) cookie in session options
+ - By default cookies ki koi expiry date nahi hoti
+ - httpOnly is used to prevent from cross scritping attack
+
+.) Implementing the flash in project 
+   -install the connect-flash
+   -require it
+   -use middleware to call it with next
+   - add the req.flash in routes in which we need to implement
+  - then create flash.ejs 
+  - then add the flash.ejs in boiilerplate code
+
+.) flash failure includes
+ - use same procedure for errors flash
+
+
+
+
+
+Proejct Phase 2 (Part d)
+------------------------------
+.) Authontication vs Authorization
+   Authontication  -  verifying someone through user id and pass
+   Authorization    -  logged in hone ke bad usko kis kis cheese ka access hai
+
+.) How are password stored
+   - we never stored the password as it is we stored its hashed form
+   - user enter password  ----> HashingFunction---> hashed form of password is stored in the db 
+
+.) what is hashing
+  - different inputs gives same length output
+  - for small change in input can give large change in output
+  - we can get input from output used modulus function (means from hashed form we can not get the normal string back)
+
+.) Salting 
+  - user ne set kiye password mei ek 32 bits or more characters added krte hai 
+    then hashed krte hai 
+    Hackers create krte hai reverse look up table
+    Reverse look up table---> hashed form stored hota hai uske sath uska origional password stored hota hai
+  
+.) Passport - getting started
+   - passport is a authentication middleware in node.js
+     passport-local  ---> authenticate with username and password
+     passport-local-mongoose ----> authentication credentials agr hame mongodb mei save krne hai to hum ye use kr skte hai
+   - username and passoword automatic create krega passportLocalMongoose plugin
+
+
+.) Configuring strategy
+  serilize user - session ke ander user ki info store krwata hai
+  deserilize user - session ke ander se user ki info unstored krta hai after logging out from the session
+
+
+.) Demo user
+   - pbkdf2  hasing algorithm is used 
+
+.) signUp user -get
+   create the signup.ejs for signup and render it 
+
+.) signUp user -post
+
+
+
+
+
+
+
+
+
+
+
+
+
+
