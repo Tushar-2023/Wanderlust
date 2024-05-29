@@ -51,6 +51,9 @@ const listingRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/reviews.js"); 
 const userRouter = require("./routes/user.js"); 
 
+//require isLoggedIn function
+const { isLoggedIn } = require("./middleware.js");
+
 //method-override
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));

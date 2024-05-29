@@ -407,6 +407,19 @@ Proejct Phase 2 (Part d)
 .) signUp user -post
 
 
+ Proejct Phase 2 (Part e)
+-------------------------------
+.) connecting the login route
+  - checking is the user is logged in
+module.exports.isLoggedIn = (req, res, next) => {
+    if(!req.isAuthenticated()){
+        console.log(req.user);
+        req.flash("error","You should logged in to add the listings");
+        return res.redirect("/login");
+    };
+};
+
+
 
 
 
