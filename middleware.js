@@ -4,4 +4,5 @@ module.exports.isLoggedIn = (req, res, next) => {
         req.flash("error","You should logged in to add the listings");
         return res.redirect("/login");
     };
+    next();
 };

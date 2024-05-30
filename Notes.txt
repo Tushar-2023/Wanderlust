@@ -1,3 +1,4 @@
+id = user   pass=user , id=demo , pass=demo
 Proejct Phase 1(Part a)
 ------------------------------
 .) Basic Set up
@@ -418,6 +419,34 @@ module.exports.isLoggedIn = (req, res, next) => {
         return res.redirect("/login");
     };
 };
+
+.) logOut user
+router.get("/logout", (req, res, next)=>{
+    req.logOut((err)=>{
+       next(err);
+    });
+    req.flash("success","You have been logged out successfully");
+    res.redirect("/listings");
+})
+
+
+.) add styling
+ res.locals aapn access kru shkto aapnn ejs madhe
+ merging the sign up, login, and logout with rest of the functionlities 
+
+.) login after signup
+  - automatically login after signup
+  - use passport ka req.login to login automatically after the signup 
+req.login(registeredUser, (err) => {
+            if (err) {
+                return next(err);
+            }
+            req.flash("success", "Welcome to WanderLust");
+            res.redirect("/listings");
+        })
+
+
+.) post login page
 
 
 
