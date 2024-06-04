@@ -19,23 +19,29 @@ const listingSchema = new Schema({
         default: "https://unsplash.com/photos/    assorted-hot-air-balloons-flying-at-high-altitude-during-daytime-hpTH5b6mo2s",
         set: (v) =>
             v === ""
-                ?"https://unsplash.com/photos/assorted-hot-air-balloons-flying-at-high-altitude-during-daytime-hpTH5b6mo2s":v,
+                ? "https://unsplash.com/photos/assorted-hot-air-balloons-flying-at-high-altitude-during-daytime-hpTH5b6mo2s" : v,
     },
     price: Number,
     location: String,
     country: String,
-    reviews:[
+    reviews: [
         {
-            type:Schema.Types.ObjectId,
-            ref:"Review"
+            type: Schema.Types.ObjectId,
+            ref: "Review"
         }
-    ]
+    ],
+    owner:
+    {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }
+
 });
 
 //post mongoose middleware
-listingSchema.post("findOneAndDelete",async (listing) => {
-    if(listing){
-        await Review.deleteMany({_id: {$in: listing.reviews}});
+listingSchema.post("findOneAndDelete", async (listing) => {
+    if (listing) {
+        await Review.deleteMany({ _id: { $in: listing.reviews } });
     }
 })
 

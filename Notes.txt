@@ -447,8 +447,17 @@ req.login(registeredUser, (err) => {
 
 
 .) post login page
+ -  passport session la reset krte login zalyavr tyamule redirectUrl delete hou shkte so 
+    aapn tyala res.locals madhe save kru shkto then login madhe use kru shkto 
 
-
+.) Listing owner
+ - jb bhi hum permission ke sath deal krte hai tb hum authorization ke sath deal krte hai
+ - adding the owner into the listing schema, then accessing the username into the 
+   into the listing screen.
+ - then each listing have owner
+ 
+.) starting with authorization
+ check:=> currUser._id.equals(listing.owner._id
 
 
 
