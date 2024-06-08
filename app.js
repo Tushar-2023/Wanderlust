@@ -13,7 +13,7 @@ const ExpressError = require("./utils/ExpressError.js")
 const session = require("express-session");
 
 //connect-flash
-const flash =  require("connect-flash"); 
+const flash = require("connect-flash");
 
 //passport
 const passport = require("passport");
@@ -48,11 +48,15 @@ const Listing = require("./models/listing.js");
 
 //require the routes
 const listingRouter = require("./routes/listing.js");
-const reviewsRouter = require("./routes/reviews.js"); 
-const userRouter = require("./routes/user.js"); 
+const reviewsRouter = require("./routes/reviews.js");
+const userRouter = require("./routes/user.js");
 
 //require isLoggedIn function
+<<<<<<< HEAD
 const { isLoggedIn,isOwner,validateReview } = require("./middleware.js");
+=======
+const { isLoggedIn, isOwner } = require("./middleware.js");
+>>>>>>> 9d2579709aae0dd1a86e30649370fba0bb3d08f4
 
 
 
@@ -66,12 +70,12 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 //function with session option
 const sessionOptions = {
-    secret:"mysupersecretecode",
-    resave:false,
-    saveUninitialized:true,
+    secret: "mysupersecretecode",
+    resave: false,
+    saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7*24*60*60*1000,
-        maxAge: 7*24*60*60*1000,
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true
     }
 }
@@ -94,7 +98,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
