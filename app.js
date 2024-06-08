@@ -53,7 +53,7 @@ const userRouter = require("./routes/user.js");
 
 //require isLoggedIn function
 
-const { isLoggedIn,isOwner,validateReview } = require("./middleware.js");
+//const { isLoggedIn,isOwner,validateReview } = require("./middleware.js");
 
 const { isLoggedIn, isOwner } = require("./middleware.js");
 
