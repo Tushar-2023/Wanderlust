@@ -1,5 +1,5 @@
 //require the mongoose
-const { string, number } = require("joi");
+const { string, number, ref } = require("joi");
 const mongoose = require("mongoose");
 
 //creating the schema
@@ -15,6 +15,10 @@ const reviewSchema = new Schema({
     createdAt: {
         type:Date,
         default:Date.now()
+    },
+    author:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
     }
 }) 
 

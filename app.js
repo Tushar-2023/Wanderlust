@@ -52,11 +52,10 @@ const reviewsRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/user.js");
 
 //require isLoggedIn function
-<<<<<<< HEAD
+
 const { isLoggedIn,isOwner,validateReview } = require("./middleware.js");
-=======
+
 const { isLoggedIn, isOwner } = require("./middleware.js");
->>>>>>> 9d2579709aae0dd1a86e30649370fba0bb3d08f4
 
 
 
