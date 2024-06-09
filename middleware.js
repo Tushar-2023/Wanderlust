@@ -1,4 +1,5 @@
 const Listing = require("./models/listing");
+const Review = require("./models/review");
 
 //custom error class 
 const ExpressError = require("./utils/ExpressError.js")
@@ -62,4 +63,17 @@ module.exports.validateReview = (req, res, next) => {
     } else {
         next();
     }
+}
+
+//isReviewAuthor
+module.exports.isReviewAuthor = async (req, res, next) => {
+    let { id, reviewId } = req.params;
+    let review = await Review.findById(reviewId);
+    //check
+    if (!review.author.equals(res.locals.currUser._id)) {
+        req.flash("error", "You are not the author of the review");
+        return res.redirect(`/listings/${id}`);
+    }
+
+    next();
 }

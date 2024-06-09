@@ -512,12 +512,65 @@ module.exports = router;
 
 
 .) authorization for reviews(part 1)
+  - we are adding the author field in the schema of the reviews
+  - then we are cheking the for the currUser in the show.ejs
+ -also we are checking the isLoggedIn in the review.js means 
+   loggedIn person should able to give onlu reviews
 
+.).) authorization for reviews(part 2)
+   - ya madhe jo review create krel toch delete krel he functionality add keli aahe
+   - isReviewAuthor method add keli aahe middleware.js
+
+
+
+
+
+
+Proejct Phase 3(Part a)
+------------------------------
  
+.) MVC- Model, view, controler
+   - ye ek design pattern hota hai
+   -code likne ka tarika hota hai
+   model - database ki core functionalities stores krata hai
+   views - frontend yane jo hum render krne wale hai o stored krata hai
+   controller - backend ki core funtionalities stored krate hai
+   - index route ka async function hmne controllers ke listing.js mie likha then routes wale
+    listing.js mei usko require kiya
 
+.) MVC for listings
+  controller ke listing.js mei sub route ke async function ke liye new function create kiye
 
+.) MVC for reviews and users
+ -restructure kela code like MVC for listings
 
+.) Router.route
+   - compact fashion mei cheeso ko likh skte hai
+   -same path ko hum baar baar na likh rahe ho hamare routes mei
+   -done for users and reviews
 
+.) restyling for ratings
+ -stars are add using the the below repo
+  https://github.com/LunarLogic/starability
+
+.) image upload
+  two chanllenge
+  1) making form capable of sending the files to the backend
+  2) third party sevice to save our files 
+  3) save this in mongo
+
+.) form manupulation
+   - form ka data by default urlenecoded hota hai
+  -  form ka data agr multipart/form-data hai to use parse krne ke liye hum multur ko use krenge
+
+.) cloud setup
+  .env file - it is environment variable/credentials
+  .env file key=value pair mei kam krte hai yane data save krti hai( KEY ka naam capital letter mei aata hai)
+   package - dotenv --> hamare .env file ko backend ke sath connect krvate hai
+  .env file sirf development mei use krte hai, not in production
+
+.) stores file  
+  
 
 
 
