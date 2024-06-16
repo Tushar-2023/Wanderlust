@@ -1,4 +1,10 @@
 <% layout("/layouts/boilerplate") %>
+
+    <script>
+        const mapToken = "<%= process.env.MAP_TOKEN %>";
+        const listing = <%- JSON.stringify(listing) %>;
+    </script>
+
     <div class="row mt-3">
         <div class="col-8 offset-3">
             <h3>
@@ -6,7 +12,7 @@
             </h3>
         </div>
         <div class="card col-6 offset-3 show-card listing-card">
-            <img src="<%= listing.image %>" class="card-img-top show-img" alt="Listing-image">
+            <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="Listing-image">
             <div class="card-body">
 
                 <p class="card-text">
@@ -86,30 +92,41 @@
 
 
 
-                        <p><b>All Reviews</b></p>
-                        <div class="row">
-                            <% for(review of listing.reviews){ %>
-                                <div class="card col-5 ms-3 mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@<%= review.author.username %>
-                                                <p class="starability-result card-text"
-                                                    data-rating="<%= review.rating %>"></p>
-                                        </h5>
-                                        <p class="card-text">
-                                            <%= review.comment %>
-                                        </p>
+                        <% if(listing.reviews.length> 0) { %>
+                            <div class="row">
+                                <p><b>All Reviews</b></p>
+                                <% for(review of listing.reviews){ %>
+                                    <div class="card col-5 ms-3 mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@<%= review.author.username %>
+                                                    <p class="starability-result card-text"
+                                                        data-rating="<%= review.rating %>"></p>
+                                            </h5>
+                                            <p class="card-text">
+                                                <%= review.comment %>
+                                            </p>
 
 
 
-                                        </p>
+                                            </p>
+                                        </div>
+                                        <form method="POST" class="mb-3"
+                                            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                            <button class="btn btn-sm btn-dark">Delete</button>
+                                        </form>
                                     </div>
-                                    <form method="POST" class="mb-3"
-                                        action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                                        <button class="btn btn-sm btn-dark">Delete</button>
-                                    </form>
-                                </div>
-                                <% } %>
-                        </div>
+                                    <% } %>
+                            </div>
+                            <% } %>
 
                 </div>
+
+                <div class="col-8 offset-3 mb-3">
+                    <h3>Where you'll be</h3>
+                    <div id="map"></div>
+                </div>
+
     </div>
+
+
+    <script src="/js/map.js"></script>

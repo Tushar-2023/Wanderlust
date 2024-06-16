@@ -15,11 +15,8 @@ const listingSchema = new Schema({
         type: String
     },
     image: {
-        type: String,
-        default: "https://unsplash.com/photos/    assorted-hot-air-balloons-flying-at-high-altitude-during-daytime-hpTH5b6mo2s",
-        set: (v) =>
-            v === ""
-                ? "https://unsplash.com/photos/assorted-hot-air-balloons-flying-at-high-altitude-during-daytime-hpTH5b6mo2s" : v,
+        url:String,
+        filename:String
     },
     price: Number,
     location: String,
@@ -34,7 +31,18 @@ const listingSchema = new Schema({
     {
         type: Schema.Types.ObjectId,
         ref: "User"
-    }
+    },
+    geometry: {
+        type: {
+          type: String, // Don't do `{ location: { type: String } }`
+          enum: ['Point'], // 'location.type' must be 'Point'
+          required: true
+        },
+        coordinates: {
+          type: [Number],
+          required: true
+        }
+      }
 
 });
 
@@ -44,7 +52,6 @@ listingSchema.post("findOneAndDelete", async (listing) => {
         await Review.deleteMany({ _id: { $in: listing.reviews } });
     }
 })
-
 
 
 //creating the model

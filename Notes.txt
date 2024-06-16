@@ -570,7 +570,120 @@ Proejct Phase 3(Part a)
   .env file sirf development mei use krte hai, not in production
 
 .) stores file  
+   -cloud vr storage assgin kel
+   -aani tyavr files upload kelya
+   using library multer-cloudinary-storage
+
+.) save link in mongo
+   - req.file madhun path aani filename kadhun tyanna url aani filename madhe store kele
+  - listing model madhe image url ani filename type defined kele as a string
+  - newListing.image = { url, filename }
+
+.) display Image
+ now reinitialize the data with url and filename
+ listing.image.url
+
+Proejct Phase 3(Part b)
+------------------------------
+.) edit listing image
+   - edit kraychya veles pn new image upload kru shklo pahije 
+   - edit.js enctype add krava lagel
+   - route madhe listing.js madhe update wala route madhe upload krava lagel image cloud vr before validation
+  - then controller madhe listing madhe image url aani filename add krava lagel
+
+.) image preview for edit image
+  - edit image mei new image upload krne ke phle hum original image ko agr dekhna chahte hai to 
+    hum image preview create kr skte hai
+
+.) getting started with maps
+mapbox
+tushar-2024
+Tushar@2024
+
+.) our first map
+ - Map gl js is library which we are using
+ - map ke center pahle longitude add krna hai fir latitude add krna hai
+
+.) gecoding 
+  geocoding --> address la convert krte cordinates madhe
+  forward geocoding  --> converts place name into the cordinates
+  reverse geocoding --> converts coordinates into the place name
+  require the mapbox in listing.js in the controllers
+  then acces the token
+  then create the geocoding client by passing the access token
   
+.) storing cordinates
+   - hum cordinates ko normally bhi store kra skte hai but use hum geoJson format mei store krwayenge
+   geojson -  it is format for storing the points and cordinates.
+
+.) Map Marker
+ iske liye pehle coordinates print hona bahut jaruri hai
+ console.log(listing.geometry.coordinates);
+
+ //creation of the marker
+ const marker1 = new mapboxgl.Marker({ color: 'red'})
+        .setLngLat(listing.geometry.coordinates)   //listing.geometry.cordinates
+        .addTo(map);
+
+.) map popup
+  - adding the popup to the marker
+  .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(
+        `<h4>${listing.title}</h4>
+            <p>Exact location will beproivided after booking</p>)`))
+
+Proejct Phase 3(Part c)
+------------------------------
+.) Fixing home page
+
+.) add ui filters 
+
+.) add  UI for tax switch
+   used switches to create the tax switch
+
+.) making tax switch functional
+
+.) add UI for search
 
 
 
+Proejct Phase 3(Part d)
+------------------------------
+.) Mongo Atlas
+   - it is an cloud database service
+
+sign in with gmail kro tnamal004@gmail.com se
+
+user login: 
+tnamale004
+bUO6qvB0wRFVzTHj
+
+db link - mongodb+srv://tnamale004:<password>@cluster0.d2p0lks.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+db link with password -
+mongodb+srv://tnamale004:bUO6qvB0wRFVzTHj@cluster0.d2p0lks.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
+.) Mongo Session store
+ we are storing the session info into the mongo atlas
+//mongostore
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: "mysupersecretecode"
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("error", ()=>{
+    console.log("ERROR in MONGO SESSION STORE: ", err);
+})
+
+.) deployment with render
+  create the account on the render 
+  then add the node version in the package.json in project
+
+.) push code to github
+  .env file ko hum github pe push nahi krte 
+   hum node modules ko bhi github push nahi krte
+   jin cheeko hum ignore krna chahte hai yane unhe add, commit, push nahi krna chahte aise cheeso ko gitignore file
+     mei rakh skte hai
